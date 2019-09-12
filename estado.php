@@ -1,11 +1,19 @@
 <?php
+$url = 'https://alertalicitacao.com.br/api/v1/licitacoesAbertas/?uf=';
+if (isset($_POST['buscar'])){
+    $url = $url.$_POST['uf'];
 
+    $json = file_get_contents($url);
+    $jsonDecode = (json_decode($json, true));
+    echo $jsonDecode["totalLicitacoes"];
+    var_dump($jsonDecode["licitacoes"]);
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
-    <title>Buscador de licitações</title>
+    <title>Buscador de licitações por estado</title>
     <link rel="stylesheet"  href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/spacelab/bootstrap.min.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -32,6 +40,13 @@
 
     </nav><br>
 
+    <div class="container col-sm-6">
+        <form method="post">
+            <label for="busca">Insira a sigla do estado</label>
+            <input type="text" class="form-control" name="uf"><br>
+            <button type="submit" class="btn btn-outline-success" name="buscar">Buscar</button>
+        </form>
+    </div>
 
 </body>
 </html>
