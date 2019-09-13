@@ -9,14 +9,15 @@ $control = new Controle;
 $url = 'https://alertalicitacao.com.br/api/v1/licitacoesAbertas/?palavra_chave=';
 if (isset($_POST['buscar'])){
     $url = $url.$_POST['palavras_chave'];
-
+    $url = str_replace(' ', '+', $url);
     $json = file_get_contents($url);
     $jsonDecode = (json_decode($json, true));
     $n = $jsonDecode['totalLicitacoes'];
     $lista_pesquisa = array();
     for ($i=0; $i < $n; $i++) { 
-        $licit = new Licitacao;
+        $lista_pesquisa[] =$jsonDecode["licitacoes"][$i];
 
+        $licit = new Licitacao;
         $licit->setIdlicitacao($jsonDecode["licitacoes"][$i]['id_licitacao']);
         $licit->setTitulo($jsonDecode["licitacoes"][$i]['titulo']);
         $licit->setMunicipio_ibge($jsonDecode["licitacoes"][$i]['municipio_IBGE']);
@@ -30,8 +31,7 @@ if (isset($_POST['buscar'])){
         $licit->setAbertura($jsonDecode["licitacoes"][$i]['abertura']);
         $licit->setId_tipo($jsonDecode["licitacoes"][$i]['id_tipo']);
         $licit->setTipo($jsonDecode["licitacoes"][$i]['tipo']);
-        array_push($lista_pesquisa, $licit);
-        //$control->inserir($licit);
+        $control->inserir($licit);
     }
 }
 ?>
@@ -84,11 +84,10 @@ if (isset($_POST['buscar'])){
                 <th scope="col">Municipio</th>
                 <th scope="col">Abertura</th>
                 <th scope="col">Tipo</th>
-                <th scope="col">Ações</th>
             </tr>
             </thead>
             <tbody>
-                <?php $control ->visualizar(); ?>
+                <?php $control ->visualizar($lista_pesquisa); ?>
             </tbody>
         </table>
     </div>

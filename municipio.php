@@ -15,8 +15,9 @@ if (isset($_POST['buscar'])){
     
     $n = $jsonDecode['totalLicitacoes'];
     for ($i=0; $i < $n; $i++) { 
-        $licit = new Licitacao;
+        $lista_pesquisa[] =$jsonDecode["licitacoes"][$i];
 
+        $licit = new Licitacao;
         $licit->setIdlicitacao($jsonDecode["licitacoes"][$i]['id_licitacao']);
         $licit->setTitulo($jsonDecode["licitacoes"][$i]['titulo']);
         $licit->setMunicipio_ibge($jsonDecode["licitacoes"][$i]['municipio_IBGE']);
@@ -30,7 +31,6 @@ if (isset($_POST['buscar'])){
         $licit->setAbertura($jsonDecode["licitacoes"][$i]['abertura']);
         $licit->setId_tipo($jsonDecode["licitacoes"][$i]['id_tipo']);
         $licit->setTipo($jsonDecode["licitacoes"][$i]['tipo']);
-
         $control->inserir($licit);
     }
 }
@@ -72,7 +72,26 @@ if (isset($_POST['buscar'])){
             <input type="text" class="form-control" name="municipio"><br>
             <button type="submit" class="btn btn-outline-success" name="buscar">Buscar</button>
         </form>
+    </div><br>
+    <?php if (isset($_POST['buscar'])) { ?>
+        <div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Id Licitacao</th>
+                <th scope="col">Titulo</th>
+                <th scope="col">Objeto</th>
+                <th scope="col">Municipio</th>
+                <th scope="col">Abertura</th>
+                <th scope="col">Tipo</th>
+            </tr>
+            </thead>
+            <tbody>
+                <?php $control ->visualizar($lista_pesquisa); ?>
+            </tbody>
+        </table>
     </div>
+    <?php } ?>
 
 </body>
 </html>

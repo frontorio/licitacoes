@@ -17,11 +17,10 @@ class ControllerLicit{
        }
     }
 
-    public function visualizar (){
+    public function visualizar ($lista){
         $visu = new View;
-        $licitacao = new LicitacaoDAO;
 
-        echo $visu->listar($licitacao->select());
+        echo $visu->listar($lista);
     }
 
 }
