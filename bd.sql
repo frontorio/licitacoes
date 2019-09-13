@@ -3,7 +3,7 @@ create database licitacao;
 use licitacao;
 
 CREATE TABLE IF NOT EXISTS licita (
-  `idlicitacao` INT NOT NULL,
+  `idlicitacao` varchar(45) NOT NULL,
   `titulo` VARCHAR(150) NOT NULL,
   `municipio_ibge` VARCHAR(45) NOT NULL,
   `orgao` VARCHAR(150) NOT NULL,

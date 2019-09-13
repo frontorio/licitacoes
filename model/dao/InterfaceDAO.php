@@ -2,7 +2,6 @@
 
 namespace dao;
 
-require "autoload.php";
 
 interface InterfaceDAO
 {

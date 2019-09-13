@@ -1,7 +1,8 @@
 <?php
 namespace dao;
 
-require "autoload.php";
+require_once "Config.php";
+require_once "InterfaceDAO.php";
 
 use PDO;
 
@@ -11,23 +12,12 @@ class LicitacaoDAO extends Config implements InterfaceDAO{
 
   public function __construct(){
     parent::__construct();
-    $this->tabela = "licitacao";
+    $this->tabela = "licita";
   }
   public function inserir($licitacao){
     try {
-      $stmt = $this->pdo->prepare("INSERT INTO $this->tabela VALUES(:idlicitacao, :titulo, :ibge, :orgao, :aberuta_date, :objeto,
-                                                                    :link, :municipio, :abertura, :id_tipo, :tipo)");
-      $stmt->bindParam(':idlicitacao', $id, PDO::PARAM_STR);
-      $stmt->bindParam(':titulo', $titulo, PDO::PARAM_STR);
-      $stmt->bindParam(':ibge', $ibge, PDO::PARAM_STR);
-      $stmt->bindParam(':orgao', $orgao, PDO::PARAM_STR);
-      $stmt->bindParam(':abertura_date', $abertura_date, PDO::PARAM_STR);
-      $stmt->bindParam(':objeto', $objeto, PDO::PARAM_STR);
-      $stmt->bindParam(':link', $link, PDO::PARAM_STR);
-      $stmt->bindParam(':municipio', $municipio, PDO::PARAM_STR);
-      $stmt->bindParam(':abertura', $abertura, PDO::PARAM_STR);
-      $stmt->bindParam(':id_tipo', $id_tipo, PDO::PARAM_STR);
-      $stmt->bindParam(':tipo', $tipo, PDO::PARAM_STR);
+      $stmt = $this->pdo->prepare("INSERT INTO $this->tabela VALUES(:idlicitacao, :titulo, :ibge, :orgao, :abertura_date,
+      :objeto, :link, :municipio, :abertura, :id_tipo, :tipo)");
 
       $id = $licitacao->getIdlicitacao();
       $titulo = $licitacao->getTitulo();
@@ -41,9 +31,22 @@ class LicitacaoDAO extends Config implements InterfaceDAO{
       $id_tipo = $licitacao->getId_tipo();
       $tipo = $licitacao->getTipo();
       
+      $stmt->bindValue(':idlicitacao', $id);
+      $stmt->bindValue(':titulo', $titulo);
+      $stmt->bindValue(':ibge', $ibge);
+      $stmt->bindValue(':orgao', $orgao);
+      $stmt->bindValue(':abertura_date', $abertura_date);
+      $stmt->bindValue(':objeto', $objeto);
+      $stmt->bindValue(':link', $link);
+      $stmt->bindValue(':municipio', $municipio);
+      $stmt->bindValue(':abertura', $abertura);
+      $stmt->bindValue(':id_tipo', $id_tipo);
+      $stmt->bindValue(':tipo', $tipo);
+
       $stmt->execute();
       return $this->pdo->lastInsertId();
-
+      if ($stmt->rowCount())
+        echo  "<script>alert('Dados salvos com sucesso!');</script>";
     } catch(PDOException $e) {
       echo 'Error: ' . $e->getMessage();
       return false;
@@ -54,17 +57,17 @@ class LicitacaoDAO extends Config implements InterfaceDAO{
       $stmt = $this->pdo->prepare("UPDATE $this->tabela SET (:id, :titulo, :ibge, :orgao, :aberuta_date, :objeto,
       :link, :municipio, :abertura, :id_tipo, :tipo) WHERE idlicitacao = :id");
 
-      $stmt->bindParam(':idlicitacao', $id, PDO::PARAM_STR);
-      $stmt->bindParam(':titulo', $titulo, PDO::PARAM_STR);
-      $stmt->bindParam(':ibge', $ibge, PDO::PARAM_STR);
-      $stmt->bindParam(':orgao', $orgao, PDO::PARAM_STR);
-      $stmt->bindParam(':abertura_date', $abertura_date, PDO::PARAM_STR);
-      $stmt->bindParam(':objeto', $objeto, PDO::PARAM_STR);
-      $stmt->bindParam(':link', $link, PDO::PARAM_STR);
-      $stmt->bindParam(':municipio', $municipio, PDO::PARAM_STR);
-      $stmt->bindParam(':abertura', $abertura, PDO::PARAM_STR);
-      $stmt->bindParam(':id_tipo', $id_tipo, PDO::PARAM_STR);
-      $stmt->bindParam(':tipo', $tipo, PDO::PARAM_STR);
+      $stmt->bindParam(':idlicitacao', $id);
+      $stmt->bindParam(':titulo', $titulo);
+      $stmt->bindParam(':ibge', $ibge);
+      $stmt->bindParam(':orgao', $orgao);
+      $stmt->bindParam(':abertura_date', $abertura_date);
+      $stmt->bindParam(':objeto', $objeto);
+      $stmt->bindParam(':link', $link);
+      $stmt->bindParam(':municipio', $municipio);
+      $stmt->bindParam(':abertura', $abertura);
+      $stmt->bindParam(':id_tipo', $id_tipo);
+      $stmt->bindParam(':tipo', $tipo);
 
       $id = $licitacao->getIdlicitacao();
       $titulo = $licitacao->getTitulo();
@@ -88,7 +91,7 @@ class LicitacaoDAO extends Config implements InterfaceDAO{
   public function excluir($licitacao){
     try {
       $stmt = $this->pdo->prepare("DELETE FROM $this->tabela WHERE idlicitacao = :id");
-      $stmt->bindParam(':codigo', $id, PDO::PARAM_INT);
+      $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
       $id = $licitacao->getIdlicitacao();
 
@@ -104,13 +107,39 @@ class LicitacaoDAO extends Config implements InterfaceDAO{
       $stmt = $this->pdo->prepare("SELECT * FROM $this->tabela ORDER BY abertura_datetime");
       
       $stmt->execute();
-      return true;
+      $bat = array();
+      while($linha = $stmt->fetch(PDO::FETCH_ASSOC)){
+        array_push($bat, $linha);
+      }
+      return $bat;
     } catch(PDOException $e) {
       echo 'Error: ' . $e->getMessage();
       return false;
     }
   }
-
+  public function selectById($id){
+    $bat = array();
+    try {
+      $stmt = $this->pdo->prepare("SELECT * FROM $this->tabela");
+      $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+      $stmt->execute();
+      
+      while($linha = $stmt->fetch(PDO::FETCH_ASSOC)){
+        array_push($bat, $linha);
+      }
+      
+     $cont = 0;
+     for ($i=0; $i < count($bat); $i++) { 
+       if ($id == $bat[$i]['idlicitacao']) {
+        $cont +=1;
+       }
+     }
+     return $cont;
+    } catch(PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
+      return false;
+    }
+  }
 
 }
  ?>

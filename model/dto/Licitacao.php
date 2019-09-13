@@ -1,7 +1,6 @@
 <?php
 namespace Dto;
 
-require "autoload.php";
 
 class Licitacao{
     private $idlicitacao;

@@ -1,7 +1,6 @@
 <?php
 namespace bo;
 
-require "autoload.php";
 
 class LicitacaoBO{
 
