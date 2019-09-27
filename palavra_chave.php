@@ -69,8 +69,14 @@ if (isset($_POST['buscar'])){
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tipo de busca</a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="palavra_chave.php">Palavra chave</a>
-                        <a class="dropdown-item" href="estado.php">Estado</a>
                         <a class="dropdown-item" href="municipio.php">Municipio</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Minhas Licitações</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="minhas_lici_ab.php">Licitações abertas</a>
+                        <a class="dropdown-item" href="minhas_lici_en.php">Licitações encerradas</a>
                     </div>
                 </li>
             </ul>
@@ -78,7 +84,7 @@ if (isset($_POST['buscar'])){
 
     </nav><br>
 
-    <div class="container col-sm-6">
+    <div class="container col-sm-10">
         <form method="post">
             <label for="busca">Insira palavras chave para busca</label>
             <input type="text" class="form-control" name="palavras_chave"><br>

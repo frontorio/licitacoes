@@ -1,11 +1,17 @@
 <?php
+use Controller\ControllerLicit as Controle;
+use Dto\Licitacao;
+
+require_once "Controller/ControllerLicit.php";
+require_once "model/dto/Licitacao.php";
+$control = new Controle;
 
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
-    <title>Buscador de licitações</title>
+    <title>Minhas licitações abertas</title>
     <link rel="stylesheet"  href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/spacelab/bootstrap.min.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -35,8 +41,21 @@
                 </li>
             </ul>
         </div>
+
     </nav><br>
 
-
+    <div class="container col-sm-10">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col"><center>Minhas licitações abertas</th>
+            </tr>
+            </thead>
+            <tbody>
+                <?php $control ->visualizar_salvas_abertas($control->select()); ?>
+            </tbody>
+        </table>
+    </div>
+    
 </body>
 </html>

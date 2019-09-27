@@ -3,7 +3,6 @@ namespace Controller;
 
 use dao\LicitacaoDAO;
 use View\View;
-
 require_once "./model/dao/LicitacaoDAO.php";
 require_once "./view/View.php";
 
@@ -23,6 +22,20 @@ class ControllerLicit{
         echo $visu->listar($lista);
     }
 
+    public function select(){
+        $licitacao = new LicitacaoDAO;
+        return $licitacao->select();
+    }
+    public function visualizar_salvas_abertas ($lista){
+        $visu = new View;
+
+        echo $visu->listar_salvas_ab($lista);
+    }
+    public function visualizar_salvas_encerradas ($lista){
+        $visu = new View;
+
+        echo $visu->listar_salvas_en($lista);
+    }
 }
 
 ?>
