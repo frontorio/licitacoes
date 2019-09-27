@@ -6,8 +6,22 @@ require_once "Controller/ControllerLicit.php";
 require_once "model/dto/Licitacao.php";
 $control = new Controle;
 $url = 'https://alertalicitacao.com.br/api/v1/licitacoesAbertas/?palavra_chave=';
+function existe(){ 
+    $url = 'https://alertalicitacao.com.br/api/v1/licitacoesAbertas/?palavra_chave="+'.$_POST['municipio'].'"';
+
+    $url = str_replace(' ', '+', $url);
+    $json = file_get_contents($url);
+    $jsonDecode = (json_decode($json, true));
+    
+    $n = $jsonDecode['totalLicitacoes'];
+    if ($n > 0) {
+        return true;
+    }else{
+        return false;
+    }
+}
 if (isset($_POST['buscar'])){
-    $url = $url.'"'.$_POST['municipio'].'"';
+    $url = $url.'"+'.$_POST['municipio'].'"';
 
     $url = str_replace(' ', '+', $url);
     $json = file_get_contents($url);
@@ -31,7 +45,7 @@ if (isset($_POST['buscar'])){
         $licit->setAbertura($jsonDecode["licitacoes"][$i]['abertura']);
         $licit->setId_tipo($jsonDecode["licitacoes"][$i]['id_tipo']);
         $licit->setTipo($jsonDecode["licitacoes"][$i]['tipo']);
-        $control->inserir($licit);
+        //$control->inserir($licit);
     }
 }
 ?>
@@ -72,26 +86,21 @@ if (isset($_POST['buscar'])){
             <input type="text" class="form-control" name="municipio"><br>
             <button type="submit" class="btn btn-outline-success" name="buscar">Buscar</button>
         </form>
-    </div><br>
-    <?php if (isset($_POST['buscar'])) { ?>
-        <div>
+        <?php if (isset($_POST['buscar']) && existe()) { ?>
         <table class="table table-hover">
             <thead>
             <tr>
-                <th scope="col">Id Licitacao</th>
-                <th scope="col">Titulo</th>
-                <th scope="col">Objeto</th>
-                <th scope="col">Municipio</th>
-                <th scope="col">Abertura</th>
-                <th scope="col">Tipo</th>
+                <th scope="col"><center>Licitações abertas</th>
             </tr>
             </thead>
             <tbody>
                 <?php $control ->visualizar($lista_pesquisa); ?>
             </tbody>
         </table>
+    <?php } else if (isset($_POST['buscar']) && !existe()) {
+        echo '<br> <h3> <center> Nenhuma licitação em aberto no municipio de '.$_POST['municipio'].'</h3>';
+    } ?>
     </div>
-    <?php } ?>
 
 </body>
 </html>
