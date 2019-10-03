@@ -12,6 +12,7 @@ $control = new Controle;
 <head>
     <meta charset="utf-8">
     <title>Minhas licitações encerradas</title>
+    <link rel="shortcut icon" href="/icon.png" type="image">
     <link rel="stylesheet"  href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/spacelab/bootstrap.min.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>

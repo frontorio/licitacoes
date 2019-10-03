@@ -1,9 +1,6 @@
 <?php
 use Controller\ControllerLicit as Controle;
-use Dto\Licitacao;
-
 require_once "Controller/ControllerLicit.php";
-require_once "model/dto/Licitacao.php";
 $control = new Controle;
 function existe(){ 
     $url = 'https://alertalicitacao.com.br/api/v1/licitacoesAbertas/?uf=SC&palavra_chave="+'.$_POST['palavras_chave'].'"';
@@ -28,22 +25,6 @@ if (isset($_POST['buscar'])){
     $lista_pesquisa = array();
     for ($i=0; $i < $n; $i++) { 
         $lista_pesquisa[] =$jsonDecode["licitacoes"][$i];
-
-        $licit = new Licitacao;
-        $licit->setIdlicitacao($jsonDecode["licitacoes"][$i]['id_licitacao']);
-        $licit->setTitulo($jsonDecode["licitacoes"][$i]['titulo']);
-        $licit->setMunicipio_ibge($jsonDecode["licitacoes"][$i]['municipio_IBGE']);
-        $licit->setOrgao($jsonDecode["licitacoes"][$i]['orgao']);
-            $data_ab = strtotime($jsonDecode["licitacoes"][$i]['abertura_datetime']);
-            $newDate = date('Y-m-d',$data_ab);
-        $licit->setAbertura_datetime($newDate);
-        $licit->setObjeto($jsonDecode["licitacoes"][$i]['objeto']);
-        $licit->setLink($jsonDecode["licitacoes"][$i]['link']);
-        $licit->setMunicipio($jsonDecode["licitacoes"][$i]['municipio']);
-        $licit->setAbertura($jsonDecode["licitacoes"][$i]['abertura']);
-        $licit->setId_tipo($jsonDecode["licitacoes"][$i]['id_tipo']);
-        $licit->setTipo($jsonDecode["licitacoes"][$i]['tipo']);
-        //$control->inserir($licit);
     }
 }
 ?>
@@ -52,6 +33,7 @@ if (isset($_POST['buscar'])){
 <head>
     <meta charset="utf-8">
     <title>Buscador de licitações por palavra chave</title>
+    <link rel="shortcut icon" href="/icon.png" type="image">
     <link rel="stylesheet"  href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/spacelab/bootstrap.min.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -106,5 +88,47 @@ if (isset($_POST['buscar'])){
     } ?>
     </div>
     
+    <div class="modal fade" id="salvar_licit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+			    <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel"></h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			     </div>
+			    <div class="modal-body">
+                    <form method="POST" action="http://www.buscalicitacoes.com.br/salvar_licit.php" enctype="multipart/form-data">
+                        <center>
+                            <div class="form-group">
+                                <label class="control-label">Deseja salvar essa licitação?</label><br>
+                                <input name="licitacao" type="hidden" class="form-control" id="licitacao" readonly="">
+                                <input name="ind" type="hidden" class="form-control" id="ind" readonly="">
+                            </div>
+                            <button type="submit" class="btn btn-outline-success">Salvar</button>
+                            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
+                        </center> 
+                    </form>
+			     </div>
+			</div>
+		</div>
+    </div>
+
+
+   
+
+	<script type="text/javascript">
+		$('#salvar_licit').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget) // Button that triggered the modal
+		  var licitacao = button.data('licit')
+          var ind = button.data('cod') // Extract info from data-* attributes
+		  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+		  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+		  var modal = $(this)
+          modal.find('.modal-title').text('Licitação: '+licitacao)
+		  modal.find('#licitacao').val(licitacao)
+		  modal.find('#ind').val(ind)
+		})
+	</script>
+
+
 </body>
 </html>

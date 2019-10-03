@@ -46,7 +46,7 @@ class LicitacaoDAO extends Config implements InterfaceDAO{
       $stmt->execute();
       return $this->pdo->lastInsertId();
       if ($stmt->rowCount())
-        echo  "<script>alert('Dados salvos com sucesso!');</script>";
+        return 1;
     } catch(PDOException $e) {
       echo 'Error: ' . $e->getMessage();
       return false;
